@@ -1,0 +1,67 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_main">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:textSize="34sp"
+                android:text="Уже "
+                android:textColor="@android:color/black"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/countPoints"
+                android:textSize="34sp"
+                android:text="ERROR "
+                android:textColor="@android:color/black"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textSize="34sp"
+                android:text="баллов"
+                android:textColor="@android:color/black"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/fab_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:text="Click me"
+            android:layout_gravity="center"
+            android:id="@+id/clickBtn" />
+
+    </LinearLayout>
+
+                          
+
+                       
+
+
+
+       
+
+  
+
+
+</RelativeLayout>
