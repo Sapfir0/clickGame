@@ -15,8 +15,9 @@ namespace clicker {
         static double multiplier = 1; // насколько мы будем умножать число снизу
         Button clickBtn;
         TextView countPoints;
-        private static System.Timers.Timer aTimer;
-// разобраться с этим мусором TODO
+        // разобраться с этим мусором TODO
+        public delegate void MethodContainer(int currentPoints);
+        public event MethodContainer OnChangedPoints;
 
         public MainClass(Button clickBtn, TextView countPoints) {
 
@@ -33,16 +34,14 @@ namespace clicker {
         public void DecrementCurrentPoints(int subtrahend) {
             currentPoints -= subtrahend;
             SetTextOnTextView(currentPoints);
+            OnChangedPoints(currentPoints);
         }
 
-
-        public void AddOneToCounter() {
-            currentPoints++;
-        }
 
         public void AddMultipierPointsToCounter() {
             currentPoints += (int)multiplier;
             SetTextOnTextView(currentPoints);
+            OnChangedPoints(currentPoints);
         }
 
         public void AddOneToCounterListener(object sender, EventArgs e) {
@@ -55,15 +54,7 @@ namespace clicker {
             countPoints.Text = intSequence;
         }
 
-        public void SetTimer() {
-            aTimer = new System.Timers.Timer(1000);
-            aTimer.Elapsed += ATimer_Elapsed;
-            aTimer.Enabled = true;
-        }
 
-        private void ATimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e) {
-            AddMultipierPointsToCounter();
-        }
     }
 
 
