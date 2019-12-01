@@ -60,6 +60,7 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="MainClass.cs" />
     <Compile Include="Resources\Resource.designer.cs" />

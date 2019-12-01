@@ -14,7 +14,13 @@ namespace clicker
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity {
 
-
+        Button clickBtn;
+        TextView countPoints;
+        Dictionary<int, int> MultiplyerCosts = new Dictionary<int, int> {
+            [Resource.Id.lowMultiplyer] = 10,
+            [Resource.Id.mediumMultiplyer] = 30
+        };
+        MainClass main;
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -25,32 +31,65 @@ namespace clicker
             SetSupportActionBar(toolbar);
 
 
-            var clickBtn = FindViewById<Button>(Resource.Id.clickBtn);
-            var countPoints = FindViewById<TextView>(Resource.Id.countPoints);
+            clickBtn = FindViewById<Button>(Resource.Id.clickBtn);
+            clickBtn.Click += AddOneToCounterListener;
+
+            countPoints = FindViewById<TextView>(Resource.Id.countPoints);
 
 
-            main = new MainClass(clickBtn, countPoints);
-            shop = new Shop();
+            var setX2multiplyerBtn = FindViewById<Button>(Resource.Id.lowMultiplyer);  // TODO вынести это в шоп, сделать его фабрикой
+            setX2multiplyerBtn.Enabled = false;
+            setX2multiplyerBtn.Text = "L " + MultiplyerCosts[Resource.Id.lowMultiplyer];
+            setX2multiplyerBtn.Click += SetLowModifier;
 
+            var setX3multiplyerBtn = FindViewById<Button>(Resource.Id.mediumMultiplyer);
+            setX3multiplyerBtn.Enabled = false;
+            setX3multiplyerBtn.Text = "M " + MultiplyerCosts[Resource.Id.mediumMultiplyer];
+            setX3multiplyerBtn.Click += SetMediumModifier;
+
+
+
+            main = new MainClass(); // один раз тут, другой в гейме, где-то надо будет убрать
+            var game = new Game(clickBtn, countPoints);
 
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
             var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
-            startIdleBtn.Click += StartIdleFarm;
+            startIdleBtn.Click += game.StartIdleFarm;
 
-            //var setX2multiplyerBtn = FindViewById<Button>(Resource.Id.lowMultiplyer);
-            //setX2multiplyerBtn.Enabled = false;
-            //setX2multiplyerBtn.Text = "L " + MultiplyerCosts[Resource.Id.lowMultiplyer];
-            //setX2multiplyerBtn.Click += SetLowModifier;
+            main.OnChangedPoints += SetTextOnTextView;
 
-            //var setX3multiplyerBtn = FindViewById<Button>(Resource.Id.mediumMultiplyer);
-            //setX3multiplyerBtn.Enabled = false;
-            //setX3multiplyerBtn.Text = "M " + MultiplyerCosts[Resource.Id.mediumMultiplyer];
-            //setX3multiplyerBtn.Click += SetMediumModifier;
-
-            var currentPointsView = FindViewById<TextView>(Resource.Id.countPoints);
-            currentPointsView.AfterTextChanged += CurrentPointsChanged;
         }
 
+        public void SetTextOnTextView(int points) {
+            Console.WriteLine(points);
+            string intSequence = points.ToString();
+            countPoints.Text = intSequence;
+            foreach (KeyValuePair<int, int> buttonCost in MultiplyerCosts) { // можно будет пропускать те, которые мы прошли давно, и не обходить каждый раз их
+                using (var h = new Handler(Looper.MainLooper))
+                    h.Post(() => {
+                        var openingButton = FindViewById<Button>(buttonCost.Key);
+                        openingButton.Enabled = points >= buttonCost.Value;
+                    });
+            }
+        }
+
+        public void AddOneToCounterListener(object sender, EventArgs e) {
+            main.AddMultipierPointsToCounter();
+        }
+
+        private void SetMediumModifier(object sender, EventArgs e) {
+            main.DecrementCurrentPoints(MultiplyerCosts[Resource.Id.mediumMultiplyer]);
+
+            double modifier = 3;
+            MainClass.IncrementMultiplier(modifier);
+        }
+
+
+        private void SetLowModifier(object sender, EventArgs e) {
+            main.DecrementCurrentPoints(MultiplyerCosts[Resource.Id.lowMultiplyer]);
+            double modifier = 2;
+            MainClass.IncrementMultiplier(modifier);
+        }
 
 
 
