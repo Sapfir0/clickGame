@@ -30,10 +30,9 @@ namespace clicker {
             return multiplier;
         }
 
-        public int DecrementCurrentPoints(int subtrahend) {
+        public void DecrementCurrentPoints(int subtrahend) {
             currentPoints -= subtrahend;
             SetTextOnTextView(currentPoints);
-            return currentPoints;
         }
 
 
