@@ -14,8 +14,7 @@ namespace clicker
     {
         MainClass main;
         Shop shop;
-        Button clickBtn;
-        TextView countPoints;            
+        
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -36,32 +35,34 @@ namespace clicker
 
 
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
-            TextView cell1 = new TextView(this);
-            cell1.Text = "idle farm";
+            var cell1 = new Button(this);
+            cell1.Text = "IdleStart";
+            cell1.Click += StartIdleFarm;
+
+            var cell2 = new Button(this);
+            cell2.Text = "X2";
+            cell2.Click += SetX2Modifier;
+
             TableRow tableRow1 = new TableRow(this);
             tableRow1.AddView(cell1);
-            tableRow1.Click += BuyItem;
-
+            tableRow1.AddView(cell2);
+            
             tableLayout.AddView(tableRow1);
 
 
-            this.clickBtn = clickBtn;
-            this.countPoints = countPoints;
-            clickBtn.Click += AddOneToCounterListener;
-
         }
 
-        private void BuyItem(object sender, EventArgs e) {
-            main.AddOnePerSecondTimerEvent();
+        private void SetX2Modifier(object sender, EventArgs e) {
+            Button currentBtn = (Button)sender;
+            currentBtn.Enabled = false;
+            double modifier = 2.0;
+            MainClass.IncrementMultiplier(modifier);
         }
 
-        public void AddOneToCounterListener(object sender, EventArgs e) {
-            int currentPoints = main.AddOneToCounter();
-            SetTextOnTextView(currentPoints);
-        }
-
-        public void SetTextOnTextView(int counter) {
-            countPoints.Text = counter.ToString();
+        private void StartIdleFarm(object sender, EventArgs e) {
+            Button currentBtn = (Button)sender;
+            currentBtn.Enabled = false;
+            main.SetTimer(); //стартовать только один раз
         }
 
 

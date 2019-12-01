@@ -34,14 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <TextView
-                android:textSize="34sp"
-                android:text="баллов"
-                android:textColor="@android:color/black"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="@dimen/fab_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+
         </LinearLayout>
 
         <Button
