@@ -60,8 +60,12 @@ namespace clicker
             int points = Convert.ToInt32(pointsS);
             foreach (KeyValuePair<int, int> buttonCost in MultiplyerCosts) { // можно будет пропускать те, которые мы прошли давно, и не обходить каждый раз их
                 if (points > buttonCost.Value) {
-                    var openingButton = FindViewById<Button>(buttonCost.Key);
-                    openingButton.Enabled = true;
+                    using (var h = new Handler(Looper.MainLooper))
+                        h.Post(() => {
+                            var openingButton = FindViewById<Button>(buttonCost.Key);
+                            openingButton.Enabled = true;
+                        });
+
                 }
             }
 
