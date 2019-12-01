@@ -12,5 +12,7 @@ using Android.Widget;
 
 namespace clicker {
     class Shop {
+
+
     }
 }
