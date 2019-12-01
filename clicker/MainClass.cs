@@ -27,7 +27,7 @@ namespace clicker {
         }
 
         public static double IncrementMultiplier(double modifier) {
-            multiplier *= modifier;
+            multiplier += modifier;
             addPointsForOneIteration = addPointsForOneIteration * (int)multiplier;
             return multiplier;
         }
@@ -45,7 +45,7 @@ namespace clicker {
         }
 
         public int AddMultipierPointsToCounterWithMultiplier() {
-            currentPoints += addPointsForOneIteration;
+            currentPoints += (int)multiplier;
             SetTextOnTextView(currentPoints);
             return currentPoints;
         }

@@ -73,7 +73,7 @@ namespace clicker
         private void SetMediumModifier(object sender, EventArgs e) {
             main.DecrementCurrentPoints(MultiplyerCosts[Resource.Id.mediumMultiplyer]);
 
-            double modifier = 1.5;
+            double modifier = 3;
             MainClass.IncrementMultiplier(modifier);
         }
 
@@ -81,7 +81,7 @@ namespace clicker
         private void SetLowModifier(object sender, EventArgs e) {
             main.DecrementCurrentPoints(MultiplyerCosts[Resource.Id.lowMultiplyer]);
 
-            double modifier = 1.2;
+            double modifier = 2;
             MainClass.IncrementMultiplier(modifier);
         }
 
