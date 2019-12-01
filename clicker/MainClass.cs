@@ -64,7 +64,6 @@ namespace clicker {
 
         private void ATimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e) {
             AddMultipierPointsToCounter();
-            SetTextOnTextView(currentPoints);
         }
     }
 
