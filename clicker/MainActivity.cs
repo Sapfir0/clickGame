@@ -21,6 +21,8 @@ namespace clicker
             [Resource.Id.mediumMultiplyer] = 30
         };
         MainClass main;
+        Game game;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -46,13 +48,9 @@ namespace clicker
             setX3multiplyerBtn.Enabled = false;
             setX3multiplyerBtn.Text = "M " + MultiplyerCosts[Resource.Id.mediumMultiplyer];
             setX3multiplyerBtn.Click += SetMediumModifier;
+            main = new MainClass(); 
+            game = new Game(main);
 
-
-
-            main = new MainClass(); // один раз тут, другой в гейме, где-то надо будет убрать
-            var game = new Game(clickBtn, countPoints);
-
-            var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
             var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
             startIdleBtn.Click += game.StartIdleFarm;
 
@@ -80,14 +78,14 @@ namespace clicker
         private void SetMediumModifier(object sender, EventArgs e) {
             main.DecrementCurrentPoints(MultiplyerCosts[Resource.Id.mediumMultiplyer]);
 
-            double modifier = 3;
+            double modifier = 2;
             MainClass.IncrementMultiplier(modifier);
         }
 
 
         private void SetLowModifier(object sender, EventArgs e) {
             main.DecrementCurrentPoints(MultiplyerCosts[Resource.Id.lowMultiplyer]);
-            double modifier = 2;
+            double modifier = 1;
             MainClass.IncrementMultiplier(modifier);
         }
 
