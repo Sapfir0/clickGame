@@ -13,7 +13,6 @@ namespace clicker {
     class MainClass {
         static int currentPoints { get; set; } //общее число очков
         static double multiplier = 1; // насколько мы будем умножать число снизу
-        static int addPointsForOneIteration = 1;
         Button clickBtn;
         TextView countPoints;
         private static System.Timers.Timer aTimer;
@@ -28,7 +27,6 @@ namespace clicker {
 
         public static double IncrementMultiplier(double modifier) {
             multiplier += modifier;
-            addPointsForOneIteration = addPointsForOneIteration * (int)multiplier;
             return multiplier;
         }
 
@@ -39,19 +37,17 @@ namespace clicker {
         }
 
 
-        public static int AddOneToCounter() {
+        public void AddOneToCounter() {
             currentPoints++;
-            return currentPoints;
         }
 
-        public int AddMultipierPointsToCounterWithMultiplier() {
+        public void AddMultipierPointsToCounter() {
             currentPoints += (int)multiplier;
             SetTextOnTextView(currentPoints);
-            return currentPoints;
         }
 
         public void AddOneToCounterListener(object sender, EventArgs e) {
-            currentPoints = AddMultipierPointsToCounterWithMultiplier();
+            AddMultipierPointsToCounter();
         }
 
         public void SetTextOnTextView(int counter) {
@@ -67,9 +63,8 @@ namespace clicker {
         }
 
         private void ATimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e) {
-            currentPoints = AddMultipierPointsToCounterWithMultiplier();
+            AddMultipierPointsToCounter();
             SetTextOnTextView(currentPoints);
-
         }
     }
 

@@ -44,12 +44,12 @@ namespace clicker
 
             var setX2multiplyerBtn = FindViewById<Button>(Resource.Id.lowMultiplyer);
             setX2multiplyerBtn.Enabled = false;
-            setX2multiplyerBtn.Text = "L ";
+            setX2multiplyerBtn.Text = "L " + MultiplyerCosts[Resource.Id.lowMultiplyer];
             setX2multiplyerBtn.Click += SetLowModifier;
 
             var setX3multiplyerBtn = FindViewById<Button>(Resource.Id.mediumMultiplyer);
             setX3multiplyerBtn.Enabled = false;
-            setX3multiplyerBtn.Text = "M ";
+            setX3multiplyerBtn.Text = "M " + MultiplyerCosts[Resource.Id.mediumMultiplyer];
             setX3multiplyerBtn.Click += SetMediumModifier;
 
             var currentPointsView = FindViewById<TextView>(Resource.Id.countPoints);
@@ -65,7 +65,7 @@ namespace clicker
                 using (var h = new Handler(Looper.MainLooper))
                     h.Post(() => {
                         var openingButton = FindViewById<Button>(buttonCost.Key);
-                        openingButton.Enabled = points > buttonCost.Value;
+                        openingButton.Enabled = points >= buttonCost.Value;
                     });
                 }
             }
