@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using Android.App;
 using Android.OS;
 using Android.Runtime;
@@ -11,16 +12,15 @@ using Android.Widget;
 namespace clicker
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity
-    {
+    public class MainActivity : AppCompatActivity {
         MainClass main;
         Shop shop;
         Dictionary<int, int> MultiplyerCosts = new Dictionary<int, int> {
-            [Resource.Id.setX2multiplyer] = 30,
-            [Resource.Id.setX3multiplyer] = 100
+            [Resource.Id.lowMultiplyer] = 10,
+            [Resource.Id.mediumMultiplyer] = 30
         };
 
-    protected override void OnCreate(Bundle savedInstanceState)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
@@ -42,13 +42,15 @@ namespace clicker
             var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
             startIdleBtn.Click += StartIdleFarm;
 
-            var setX2multiplyerBtn = FindViewById<Button>(Resource.Id.setX2multiplyer);
+            var setX2multiplyerBtn = FindViewById<Button>(Resource.Id.lowMultiplyer);
             setX2multiplyerBtn.Enabled = false;
-            setX2multiplyerBtn.Click += SetX2Modifier;
+            setX2multiplyerBtn.Text = "L ";
+            setX2multiplyerBtn.Click += SetLowModifier;
 
-            var setX3multiplyerBtn = FindViewById<Button>(Resource.Id.setX3multiplyer);
+            var setX3multiplyerBtn = FindViewById<Button>(Resource.Id.mediumMultiplyer);
             setX3multiplyerBtn.Enabled = false;
-            setX3multiplyerBtn.Click += SetX3Modifier;
+            setX3multiplyerBtn.Text = "M ";
+            setX3multiplyerBtn.Click += SetMediumModifier;
 
             var currentPointsView = FindViewById<TextView>(Resource.Id.countPoints);
             currentPointsView.AfterTextChanged += CurrentPointsChanged;
@@ -56,35 +58,30 @@ namespace clicker
 
         private void CurrentPointsChanged(object sender, Android.Text.AfterTextChangedEventArgs e) {
             TextView pointsView = (TextView)sender;
-            string pointsS = pointsView.Text.Clone().ToString();
+            string pointsS = pointsView.Text;
             int points = Convert.ToInt32(pointsS);
-            foreach (KeyValuePair<int, int> buttonCost in MultiplyerCosts) { // можно будет пропускать те, которые мы прошли давно, и не обходить каждый раз их
-                if (points > buttonCost.Value) {
-                    using (var h = new Handler(Looper.MainLooper))
-                        h.Post(() => {
-                            var openingButton = FindViewById<Button>(buttonCost.Key);
-                            openingButton.Enabled = true;
-                        });
 
+            foreach (KeyValuePair<int, int> buttonCost in MultiplyerCosts) { // можно будет пропускать те, которые мы прошли давно, и не обходить каждый раз их
+                using (var h = new Handler(Looper.MainLooper))
+                    h.Post(() => {
+                        var openingButton = FindViewById<Button>(buttonCost.Key);
+                        openingButton.Enabled = points > buttonCost.Value;
+                    });
                 }
             }
 
-        }
+        private void SetMediumModifier(object sender, EventArgs e) {
+            main.DecrementCurrentPoints(MultiplyerCosts[Resource.Id.mediumMultiplyer]);
 
-        private void SetX3Modifier(object sender, EventArgs e) {
-            Button currentBtn = (Button)sender;
-            currentBtn.Enabled = false;
-
-            double modifier = 3.0;
+            double modifier = 1.5;
             MainClass.IncrementMultiplier(modifier);
         }
 
 
-        private void SetX2Modifier(object sender, EventArgs e) {
-            Button currentBtn = (Button)sender;
-            currentBtn.Enabled = false;
-            
-            double modifier = 2.0;
+        private void SetLowModifier(object sender, EventArgs e) {
+            main.DecrementCurrentPoints(MultiplyerCosts[Resource.Id.lowMultiplyer]);
+
+            double modifier = 1.2;
             MainClass.IncrementMultiplier(modifier);
         }
 

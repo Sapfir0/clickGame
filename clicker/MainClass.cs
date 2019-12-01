@@ -32,20 +32,26 @@ namespace clicker {
             return multiplier;
         }
 
+        public int DecrementCurrentPoints(int subtrahend) {
+            currentPoints -= subtrahend;
+            SetTextOnTextView(currentPoints);
+            return currentPoints;
+        }
+
 
         public static int AddOneToCounter() {
             currentPoints++;
             return currentPoints;
         }
 
-        public static int AddMultipierPointsToCounterWithMultiplier() {
+        public int AddMultipierPointsToCounterWithMultiplier() {
             currentPoints += addPointsForOneIteration;
+            SetTextOnTextView(currentPoints);
             return currentPoints;
         }
 
         public void AddOneToCounterListener(object sender, EventArgs e) {
             currentPoints = AddMultipierPointsToCounterWithMultiplier();
-            SetTextOnTextView(currentPoints);
         }
 
         public void SetTextOnTextView(int counter) {
