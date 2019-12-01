@@ -11,7 +11,7 @@ using Android.Widget;
 
 namespace clicker {
     class MainClass {
-        static int currentPoints; //общее число очков
+        static int currentPoints { get; set; } //общее число очков
         static double multiplier = 1; // насколько мы будем умножать число снизу
         static int addPointsForOneIteration = 1;
         Button clickBtn;

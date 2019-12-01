@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Android.App;
 using Android.OS;
 using Android.Runtime;
@@ -14,9 +15,12 @@ namespace clicker
     {
         MainClass main;
         Shop shop;
-        
+        Dictionary<int, int> MultiplyerCosts = new Dictionary<int, int> {
+            [Resource.Id.setX2multiplyer] = 30,
+            [Resource.Id.setX3multiplyer] = 100
+        };
 
-        protected override void OnCreate(Bundle savedInstanceState)
+    protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
@@ -35,26 +39,47 @@ namespace clicker
 
 
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
-            var cell1 = new Button(this);
-            cell1.Text = "IdleStart";
-            cell1.Click += StartIdleFarm;
+            var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
+            startIdleBtn.Click += StartIdleFarm;
 
-            var cell2 = new Button(this);
-            cell2.Text = "X2";
-            cell2.Click += SetX2Modifier;
+            var setX2multiplyerBtn = FindViewById<Button>(Resource.Id.setX2multiplyer);
+            setX2multiplyerBtn.Enabled = false;
+            setX2multiplyerBtn.Click += SetX2Modifier;
 
-            TableRow tableRow1 = new TableRow(this);
-            tableRow1.AddView(cell1);
-            tableRow1.AddView(cell2);
-            
-            tableLayout.AddView(tableRow1);
+            var setX3multiplyerBtn = FindViewById<Button>(Resource.Id.setX3multiplyer);
+            setX3multiplyerBtn.Enabled = false;
+            setX3multiplyerBtn.Click += SetX3Modifier;
 
+            var currentPointsView = FindViewById<TextView>(Resource.Id.countPoints);
+            currentPointsView.AfterTextChanged += CurrentPointsChanged;
+        }
+
+        private void CurrentPointsChanged(object sender, Android.Text.AfterTextChangedEventArgs e) {
+            TextView pointsView = (TextView)sender;
+            string pointsS = pointsView.Text.Clone().ToString();
+            int points = Convert.ToInt32(pointsS);
+            foreach (KeyValuePair<int, int> buttonCost in MultiplyerCosts) { // можно будет пропускать те, которые мы прошли давно, и не обходить каждый раз их
+                if (points > buttonCost.Value) {
+                    var openingButton = FindViewById<Button>(buttonCost.Key);
+                    openingButton.Enabled = true;
+                }
+            }
 
         }
+
+        private void SetX3Modifier(object sender, EventArgs e) {
+            Button currentBtn = (Button)sender;
+            currentBtn.Enabled = false;
+
+            double modifier = 3.0;
+            MainClass.IncrementMultiplier(modifier);
+        }
+
 
         private void SetX2Modifier(object sender, EventArgs e) {
             Button currentBtn = (Button)sender;
             currentBtn.Enabled = false;
+            
             double modifier = 2.0;
             MainClass.IncrementMultiplier(modifier);
         }
