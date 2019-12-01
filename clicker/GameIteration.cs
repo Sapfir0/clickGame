@@ -11,7 +11,7 @@ using Android.Views;
 using Android.Widget;
 
 namespace clicker {
-    class Game {
+    class GameIteration {
 
         Dictionary<int, int> MultiplyerCosts = new Dictionary<int, int> {
             [Resource.Id.lowMultiplyer] = 10,
@@ -22,9 +22,11 @@ namespace clicker {
         MainClass main;
         Shop shop;
 
-        public Game(Button clickBtn, TextView countPoints) {
+        public GameIteration(Button clickBtn, TextView countPoints) {
             main = new MainClass(clickBtn, countPoints);
 
+            var currentPointsView = FindViewById<TextView>(Resource.Id.countPoints);
+            currentPointsView.AfterTextChanged += CurrentPointsChanged;
             var setX2multiplyerBtn = FindViewById<Button>(Resource.Id.lowMultiplyer);  // TODO вынести это в шоп, сделать его фабрикой
             setX2multiplyerBtn.Enabled = false;
             setX2multiplyerBtn.Text = "L " + MultiplyerCosts[Resource.Id.lowMultiplyer];
@@ -35,7 +37,9 @@ namespace clicker {
             setX3multiplyerBtn.Text = "M " + MultiplyerCosts[Resource.Id.mediumMultiplyer];
             setX3multiplyerBtn.Click += SetMediumModifier;
 
+
         }
+
 
         private void CurrentPointsChanged(object sender, Android.Text.AfterTextChangedEventArgs e) {
             TextView pointsView = (TextView)sender;
@@ -50,7 +54,7 @@ namespace clicker {
             }
         }
 
-        public void GameLoop() {
+        public void StartGameLoop() {
             aTimer = new System.Timers.Timer(1000);
             aTimer.Elapsed += TickElapsed;
             aTimer.Enabled = true;
@@ -78,7 +82,7 @@ namespace clicker {
         public void StartIdleFarm(object sender, EventArgs e) {
             Button currentBtn = (Button)sender;
             currentBtn.Enabled = false;
-            GameLoop(); //стартовать только один раз
+            StartGameLoop(); //стартовать только один раз
         }
 
     }
