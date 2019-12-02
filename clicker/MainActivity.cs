@@ -42,8 +42,8 @@ namespace clicker
             shop = new Shop(main);
 
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
-            shop.CreateButtonOnNewRow(this, ref tableLayout, 10, 1);
-            shop.CreateButtonOnNewRow(this, ref tableLayout, 30, 2);
+            shop.CreateButtonOnNewRow(this, ref tableLayout, 10, 1, 2);
+            shop.CreateButtonOnNewRow(this, ref tableLayout, 30, 2, 3);
 
 
 
@@ -51,6 +51,7 @@ namespace clicker
             startIdleBtn.Click += game.StartIdleFarm;
 
             main.OnChangedPoints += SetTextOnTextView;
+            main.OnChangedPoints += ComparePointsWithShop;
 
         }
 
@@ -59,7 +60,11 @@ namespace clicker
             Console.WriteLine(points);
             string intSequence = points.ToString();
             countPoints.Text = intSequence;
-            foreach (var multiplyerCost in shop.MultiplyersCosts) { 
+
+        }
+
+        public void ComparePointsWithShop(int points) {
+            foreach (var multiplyerCost in shop.MultiplyersCosts) {
 
                 using (var h = new Handler(Looper.MainLooper))
                     h.Post(() => {
