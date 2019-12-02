@@ -41,8 +41,8 @@ namespace clicker
             shop = new Shop(main);
 
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
-            shop.CreateButtonOnNewRow(this, ref tableLayout, 10);
-            shop.CreateButtonOnNewRow(this, ref tableLayout, 30);
+            shop.CreateButtonOnNewRow(this, ref tableLayout, 10, 1);
+            shop.CreateButtonOnNewRow(this, ref tableLayout, 30, 2);
 
 
             var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
@@ -56,11 +56,11 @@ namespace clicker
             Console.WriteLine(points);
             string intSequence = points.ToString();
             countPoints.Text = intSequence;
-            foreach (KeyValuePair<int, int> buttonCost in shop.MultiplyerCosts) { // можно будет пропускать те, которые мы прошли давно, и не обходить каждый раз их
+            foreach (var multiplyerCost in shop.MultiplyersCosts) { 
                 using (var h = new Handler(Looper.MainLooper))
                     h.Post(() => {
-                        var openingButton = FindViewById<Button>(buttonCost.Key);
-                        openingButton.Enabled = points >= buttonCost.Value;
+                        var openingButton = FindViewById<Button>(multiplyerCost.ButtonId);
+                        openingButton.Enabled = points >= multiplyerCost.Cost;
                     });
             }
         }
