@@ -12,18 +12,12 @@ using Android.Widget;
 
 namespace clicker {
     class Game {
-
-        Dictionary<int, int> MultiplyerCosts = new Dictionary<int, int> {
-            [Resource.Id.lowMultiplyer] = 10,
-            [Resource.Id.mediumMultiplyer] = 30
-        };
         private static System.Timers.Timer aTimer;
 
         MainClass main;
-        Shop shop;
 
-        public Game(Button clickBtn, TextView countPoints) {
-
+        public Game(MainClass main) {
+            this.main = main;
         }
 
 
@@ -31,7 +25,6 @@ namespace clicker {
         private void TickElapsed(object sender, System.Timers.ElapsedEventArgs e) {
             main.AddMultipierPointsToCounter();
         }
-
 
 
         public void StartIdleFarm(object sender, EventArgs e) {
