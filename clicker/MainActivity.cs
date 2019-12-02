@@ -21,6 +21,7 @@ namespace clicker
         Game game;
         Shop shop;
 
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -45,6 +46,7 @@ namespace clicker
             shop.CreateButtonOnNewRow(this, ref tableLayout, 30, 2);
 
 
+
             var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
             startIdleBtn.Click += game.StartIdleFarm;
 
@@ -52,11 +54,13 @@ namespace clicker
 
         }
 
+
         public void SetTextOnTextView(int points) {
             Console.WriteLine(points);
             string intSequence = points.ToString();
             countPoints.Text = intSequence;
             foreach (var multiplyerCost in shop.MultiplyersCosts) { 
+
                 using (var h = new Handler(Looper.MainLooper))
                     h.Post(() => {
                         var openingButton = FindViewById<Button>(multiplyerCost.ButtonId);
@@ -68,8 +72,6 @@ namespace clicker
         public void AddOneToCounterListener(object sender, EventArgs e) {
             main.AddMultipierPointsToCounter();
         }
-
-
 
 
         protected override void OnDestroy() {

@@ -21,6 +21,7 @@ namespace clicker {
         }
 
 
+
         private void TickElapsed(object sender, System.Timers.ElapsedEventArgs e) {
             main.AddMultipierPointsToCounter();
         }

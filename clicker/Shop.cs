@@ -91,5 +91,6 @@ namespace clicker {
             main.DecrementCurrentPoints(multiplyerCost.Cost);
             MainClass.IncrementMultiplier(multiplyerCost.CounterMultiplyer);
         }
+
     }
 }
