@@ -14,9 +14,10 @@ namespace clicker {
     class Shop {
         public List<Multiplyer> MultiplyersCosts = new List<Multiplyer>();
 
-        MainClass main;
-        public Shop(MainClass main) {
-            this.main = main;
+        Game game;
+
+        public Shop(Game game) {
+            this.game = game;
         }
 
         private bool ContainsId(List<Multiplyer> multiplyers, int id) { // это нужно будет очень редко, но напишу все же
@@ -88,8 +89,8 @@ namespace clicker {
         private void BuyModifier(object sender, EventArgs e) {
             var currentBtn = (Button)sender;
             var multiplyerCost = FindById(MultiplyersCosts, currentBtn.Id);
-            main.DecrementCurrentPoints(multiplyerCost.Cost);
-            MainClass.IncrementMultiplier(multiplyerCost.CounterMultiplyer);
+            game.DecrementCurrentPoints(multiplyerCost.Cost);
+            game.IncrementMultiplier(multiplyerCost.CounterMultiplyer);
             UpdateButtonCost(currentBtn);
         }
 

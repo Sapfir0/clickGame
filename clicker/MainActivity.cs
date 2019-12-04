@@ -17,10 +17,8 @@ namespace clicker
         Button clickBtn;
         TextView countPoints;
 
-        MainClass main;
         Game game;
         Shop shop;
-
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -31,28 +29,23 @@ namespace clicker
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-
             clickBtn = FindViewById<Button>(Resource.Id.clickBtn);
             clickBtn.Click += AddOneToCounterListener;
             countPoints = FindViewById<TextView>(Resource.Id.countPoints);
 
-
-            main = new MainClass(); 
-            game = new Game(main);
-            shop = new Shop(main);
+            game = new Game();
+            shop = new Shop(game);
 
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
             shop.CreateButtonOnNewRow(this, ref tableLayout, 10, 1, 2);
             shop.CreateButtonOnNewRow(this, ref tableLayout, 30, 2, 3);
 
 
-
             var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
             startIdleBtn.Click += game.StartIdleFarm;
 
-            main.OnChangedPoints += SetTextOnTextView;
-            main.OnChangedPoints += ComparePointsWithShop;
-
+            game.OnChangedPoints += SetTextOnTextView;
+            game.OnChangedPoints += ComparePointsWithShop;
         }
 
 
@@ -65,7 +58,6 @@ namespace clicker
 
         public void ComparePointsWithShop(int points) {
             foreach (var multiplyerCost in shop.MultiplyersCosts) {
-
                 using (var h = new Handler(Looper.MainLooper))
                     h.Post(() => {
                         var openingButton = FindViewById<Button>(multiplyerCost.ButtonId);
@@ -75,7 +67,7 @@ namespace clicker
         }
 
         public void AddOneToCounterListener(object sender, EventArgs e) {
-            main.AddMultipierPointsToCounter();
+            game.AddMultipierPointsToCounter();
         }
 
 
