@@ -13,8 +13,8 @@ using Android.Widget;
 namespace clicker {
     class Game {
         private static System.Timers.Timer aTimer;
-        static int currentPoints { get; set; } //общее число очков
-        static double multiplier = 1; // насколько мы будем умножать число снизу
+        int currentPoints { get; set; } //общее число очков
+        double multiplier = 1; // насколько мы будем умножать число снизу
 
         public delegate void MethodContainer(int currentPoints);
         public event MethodContainer OnChangedPoints;
