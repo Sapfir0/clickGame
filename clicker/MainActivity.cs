@@ -39,7 +39,7 @@ namespace clicker
             
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
             var multiplyersList = new List<Tuple<int, int, int>>()  {
-                Tuple.Create(10, 1, 2), Tuple.Create(30, 2, 3)
+                Tuple.Create(5, 1, 2), Tuple.Create(30, 2, 3)
             };
 
             foreach (var item in multiplyersList)  {
@@ -64,7 +64,14 @@ namespace clicker
             Console.WriteLine(points);
             string intSequence = points.ToString();
             countPoints.Text = intSequence;
+            foreach (var multiplyerCost in Shop.MultiplyersCosts) {
 
+                using (var h = new Handler(Looper.MainLooper))
+                    h.Post(() => {
+                        var openingButton = FindViewById<Button>(multiplyerCost.ButtonId);
+                        openingButton.Enabled = points >= multiplyerCost.Cost;
+                    });
+            }
         }
 
 
@@ -83,6 +90,7 @@ namespace clicker
             var multiplyerCost = Shop.FindById(currentBtn.Id); 
             game.DecrementCurrentPoints(multiplyerCost.Cost);
             game.IncrementMultiplier(multiplyerCost.CounterMultiplyer);
+            shop.UpdateMultiplyerCost(currentBtn.Id);
         }
 
 

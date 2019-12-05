@@ -13,12 +13,13 @@ using Android.Widget;
 
 namespace clicker {
     class Shop {
-        private static List<Multiplyer> MultiplyersCosts = new List<Multiplyer>();
+        public static List<Multiplyer> MultiplyersCosts = new List<Multiplyer>();
 
         Game game;
         
         public delegate void MethodContainer(int buttonId, int cost);
         public event MethodContainer OnMultiplyerCostChanged;
+
         public Shop(Game game) {
             this.game = game;
         }
@@ -45,6 +46,7 @@ namespace clicker {
             throw new KeyNotFoundException("Не найдено");
         }
 
+
         public static int Index(int id) {
             for (int i = 0; i < MultiplyersCosts.Count; i++) {
                 if (MultiplyersCosts[i].ButtonId == id) {
@@ -56,9 +58,10 @@ namespace clicker {
 
        
 
-        private void UpdateMultiplyerCost(int buttonId) {
-            MultiplyersCosts[buttonId].Cost *= MultiplyersCosts[buttonId].CostMultiplyer;
-            OnMultiplyerCostChanged(buttonId, MultiplyersCosts[buttonId].Cost);
+        public void UpdateMultiplyerCost(int buttonId)  {
+            int index = Index(buttonId);
+            MultiplyersCosts[index].Cost *= MultiplyersCosts[index].CostMultiplyer;
+            OnMultiplyerCostChanged(buttonId, MultiplyersCosts[index].Cost);
         }
 
     }
