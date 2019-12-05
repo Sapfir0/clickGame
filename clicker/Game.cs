@@ -12,26 +12,12 @@ using Android.Widget;
 
 namespace clicker {
     class Game {
-        private static System.Timers.Timer aTimer;
+        private System.Timers.Timer aTimer;
         int currentPoints { get; set; } //общее число очков
         double multiplier = 1; // насколько мы будем умножать число снизу
 
         public delegate void MethodContainer(int currentPoints);
         public event MethodContainer OnChangedPoints;
-
-        private static Game instance;
-        private static readonly object syncRoot = new object();
-
-        public static Game GetInstance() {
-            if (instance == null) {
-                lock (syncRoot) {
-                    if (instance == null) {
-                        instance = new Game();
-                    }
-                }
-            }
-            return instance;
-        }
 
         public double IncrementMultiplier(double modifier) {
             multiplier += modifier;
@@ -55,9 +41,7 @@ namespace clicker {
         }
 
 
-        public void StartIdleFarm(object sender, EventArgs e) {
-            var currentBtn = (Button)sender;
-            currentBtn.Enabled = false;
+        public void StartIdleFarm() {
             aTimer = new System.Timers.Timer(1000);
             aTimer.Elapsed += TickElapsed;
             aTimer.Enabled = true;

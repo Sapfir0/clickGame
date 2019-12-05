@@ -28,13 +28,19 @@ namespace clicker
             _clickBtn.Click += AddOneToCounterListener;
             _countPoints = FindViewById<TextView>(Resource.Id.countPoints);
 
-            _game = Game.GetInstance();
+            _game = new Game();
             _shop = new Shop();
             
             
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
             var multipliersList = new List<Tuple<int, int, int>>()  {
-                Tuple.Create(5, 1, 2), Tuple.Create(30, 2, 3)
+                Tuple.Create(1, 1, 2),
+                Tuple.Create(1, 2, 2),
+                Tuple.Create(10, 3, 3),
+                Tuple.Create(15, 7, 4),
+                Tuple.Create(20, 11, 6),
+                Tuple.Create(25, 19, 6),
+                Tuple.Create(30, 29, 7)
             };
 
             foreach (var item in multipliersList)  {
@@ -46,24 +52,30 @@ namespace clicker
 
 
             var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
-            startIdleBtn.Click += _game.StartIdleFarm;
+            startIdleBtn.Click += (object obj, EventArgs args) =>
+            {
+                startIdleBtn.Enabled = false;
+                _game.StartIdleFarm();
+            };
 
-            _game.OnChangedPoints += SetTextOnTextView;
+            _game.OnChangedPoints += SetScoreOnTextView;
             _shop.OnMultiplierCostChanged += UpdateButtonCost;
         }
 
 
-        public void SetTextOnTextView(int points) {
-            Console.WriteLine(points);
-            var intSequence = points.ToString(CultureInfo.CurrentCulture);
-            _countPoints.Text = intSequence;
-            foreach (var multiplierCost in Shop.MultipliersCosts)  {
-                using var h = new Handler(Looper.MainLooper);
-                h.Post(() => {
+        public void SetScoreOnTextView(int points) {
+            using var h = new Handler(Looper.MainLooper);
+            h.Post(() => {
+                string intSequence = points.ToString(CultureInfo.CurrentCulture);
+                _countPoints.Text = intSequence;
+                Console.WriteLine(points);
+
+                foreach (var multiplierCost in Shop.MultipliersCosts)  {
                     var openingButton = FindViewById<Button>(multiplierCost.ButtonId);
                     openingButton.Enabled = points >= multiplierCost.Cost;
-                });
-            }
+                }
+            });
+            
         }
 
 
