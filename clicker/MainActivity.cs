@@ -33,13 +33,19 @@ namespace clicker
             clickBtn.Click += AddOneToCounterListener;
             countPoints = FindViewById<TextView>(Resource.Id.countPoints);
 
-            game = Game.GetInstanse();
+            game = new Game();
             shop = new Shop(game);
             
             
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
             var multiplyersList = new List<Tuple<int, int, int>>()  {
-                Tuple.Create(5, 1, 2), Tuple.Create(30, 2, 3)
+                Tuple.Create(1, 1, 2),
+                Tuple.Create(1, 2, 2),
+                Tuple.Create(10, 3, 3), 
+                Tuple.Create(15, 7, 4),
+                Tuple.Create(20, 11, 6),
+                Tuple.Create(25, 19, 6),
+                Tuple.Create(30, 29, 7)
             };
 
             foreach (var item in multiplyersList)  {
@@ -52,26 +58,29 @@ namespace clicker
 
 
             var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
-            startIdleBtn.Click += game.StartIdleFarm;
+            startIdleBtn.Click += (object obj, EventArgs args) =>
+            {
+                startIdleBtn.Enabled = false;
+                game.StartIdleFarm();
+            };
 
-            game.OnChangedPoints += SetTextOnTextView;
+            game.OnChangedPoints += SetScoreOnTextView;
 
             shop.OnMultiplyerCostChanged += UpdateButtonCost;
         }
 
 
-        public void SetTextOnTextView(int points) {
-            Console.WriteLine(points);
-            string intSequence = points.ToString();
-            countPoints.Text = intSequence;
-            foreach (var multiplyerCost in Shop.MultiplyersCosts) {
-
-                using (var h = new Handler(Looper.MainLooper))
-                    h.Post(() => {
+        public void SetScoreOnTextView(int points) {
+            using (var h = new Handler(Looper.MainLooper))
+                h.Post(() => {
+                    string intSequence = points.ToString();
+                    Console.WriteLine(points);
+                    countPoints.Text = intSequence;
+                    foreach (var multiplyerCost in Shop.MultiplyersCosts) {
                         var openingButton = FindViewById<Button>(multiplyerCost.ButtonId);
                         openingButton.Enabled = points >= multiplyerCost.Cost;
-                    });
-            }
+                    }
+                });
         }
 
 
@@ -82,7 +91,6 @@ namespace clicker
         public void UpdateButtonCost(int buttonId, int cost) {
             var button = FindViewById<Button>(buttonId);
             button.Text = cost.ToString(CultureInfo.CurrentCulture); // ух лучше пусть предупреждение будет, чем этот аргмент
-
         }
 
         private void BuyModifier(object sender, EventArgs e) {
