@@ -42,8 +42,11 @@ namespace clicker {
 
         public void UpdateMultiplierCost(int buttonId)  {
             var index = Index(buttonId);
-            MultipliersCosts[index].Cost *= MultipliersCosts[index].CostMultiplier;
-            OnMultiplierCostChanged?.Invoke(buttonId, MultipliersCosts[index].Cost);
+            var mult = MultipliersCosts[index];
+
+            mult.Cost *= mult.CostMultiplier;
+            var buttonText = $"{mult.Cost}P +{mult.CounterMultiplier}/клик";
+            OnMultiplierCostChanged?.Invoke(buttonId, buttonText);
         }
 
     }

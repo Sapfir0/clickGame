@@ -17,7 +17,6 @@ namespace clicker {
         
         private static Button CreateButton(Context context, int cost, int multiplier) {
             var newBtn = new Button(context) {
-                Text = cost.ToString(CultureInfo.CurrentCulture) + "P " + multiplier.ToString(CultureInfo.CurrentCulture),
                 Enabled = false
             };
             var rand = new Random();
