@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using Android.App;
 using Android.OS;
 using Android.Runtime;
@@ -17,13 +18,10 @@ namespace clicker
         Button clickBtn;
         TextView countPoints;
 
-        MainClass main;
         Game game;
         Shop shop;
 
-
-        protected override void OnCreate(Bundle savedInstanceState)
-        {
+        protected override void OnCreate(Bundle savedInstanceState) {
             base.OnCreate(savedInstanceState);
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
@@ -31,28 +29,34 @@ namespace clicker
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-
             clickBtn = FindViewById<Button>(Resource.Id.clickBtn);
             clickBtn.Click += AddOneToCounterListener;
             countPoints = FindViewById<TextView>(Resource.Id.countPoints);
 
-
-            main = new MainClass(); 
-            game = new Game(main);
-            shop = new Shop(main);
-
+            game = Game.GetInstanse();
+            shop = new Shop(game);
+            
+            
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
-            shop.CreateButtonOnNewRow(this, ref tableLayout, 10, 1, 2);
-            shop.CreateButtonOnNewRow(this, ref tableLayout, 30, 2, 3);
+            var multiplyersList = new List<Tuple<int, int, int>>()  {
+                Tuple.Create(5, 1, 2), Tuple.Create(30, 2, 3)
+            };
 
+            foreach (var item in multiplyersList)  {
+                var (cost, multiplyer, costMultiplyer) = item;
+                var button = MultiplyerButtonBuilder.CreateButtonOnNewRow(this, ref tableLayout, cost, multiplyer, costMultiplyer);
+                button.Click += BuyModifier;
+                var mult = new Multiplyer(button.Id, cost, multiplyer, costMultiplyer);
+                shop.AddMultiplyerCost(mult);
+            }
 
 
             var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
             startIdleBtn.Click += game.StartIdleFarm;
 
-            main.OnChangedPoints += SetTextOnTextView;
-            main.OnChangedPoints += ComparePointsWithShop;
+            game.OnChangedPoints += SetTextOnTextView;
 
+            shop.OnMultiplyerCostChanged += UpdateButtonCost;
         }
 
 
@@ -60,11 +64,7 @@ namespace clicker
             Console.WriteLine(points);
             string intSequence = points.ToString();
             countPoints.Text = intSequence;
-
-        }
-
-        public void ComparePointsWithShop(int points) {
-            foreach (var multiplyerCost in shop.MultiplyersCosts) {
+            foreach (var multiplyerCost in Shop.MultiplyersCosts) {
 
                 using (var h = new Handler(Looper.MainLooper))
                     h.Post(() => {
@@ -74,9 +74,25 @@ namespace clicker
             }
         }
 
+
         public void AddOneToCounterListener(object sender, EventArgs e) {
-            main.AddMultipierPointsToCounter();
+            game.AddMultipierPointsToCounter();
         }
+
+        public void UpdateButtonCost(int buttonId, int cost) {
+            var button = FindViewById<Button>(buttonId);
+            button.Text = cost.ToString(CultureInfo.CurrentCulture); // ух лучше пусть предупреждение будет, чем этот аргмент
+
+        }
+
+        private void BuyModifier(object sender, EventArgs e) {
+            var currentBtn = (Button)sender;
+            var multiplyerCost = Shop.FindById(currentBtn.Id); 
+            game.DecrementCurrentPoints(multiplyerCost.Cost);
+            game.IncrementMultiplier(multiplyerCost.CounterMultiplyer);
+            shop.UpdateMultiplyerCost(currentBtn.Id);
+        }
+
 
 
         protected override void OnDestroy() {
@@ -84,13 +100,6 @@ namespace clicker
             // запомнимать текщуие пойнты и усилители
         }
 
-
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
-        {
-            Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-
-            base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
 	}
 }
 

@@ -13,16 +13,45 @@ using Android.Widget;
 namespace clicker {
     class Game {
         private static System.Timers.Timer aTimer;
+        int currentPoints { get; set; } //общее число очков
+        double multiplier = 1; // насколько мы будем умножать число снизу
 
-        MainClass main;
+        public delegate void MethodContainer(int currentPoints);
+        public event MethodContainer OnChangedPoints;
 
-        public Game(MainClass main) {
-            this.main = main;
+        private static Game instanse;
+        private static object syncRoot = new Object();
+
+        public static Game GetInstanse() {
+            if (instanse == null) {
+                lock (syncRoot) {
+                    if (instanse == null) {
+                        instanse = new Game();
+                    }
+                }
+            }
+            return instanse;
+        }
+
+        public double IncrementMultiplier(double modifier) {
+            multiplier += modifier;
+            return multiplier;
+        }
+
+        public void DecrementCurrentPoints(int subtrahend) {
+            currentPoints -= subtrahend;
+            OnChangedPoints(currentPoints);
+        }
+
+
+        public void AddMultipierPointsToCounter() {
+            currentPoints += (int)multiplier;
+            OnChangedPoints(currentPoints);
         }
 
 
         private void TickElapsed(object sender, System.Timers.ElapsedEventArgs e) {
-            main.AddMultipierPointsToCounter();
+            AddMultipierPointsToCounter();
         }
 
 
