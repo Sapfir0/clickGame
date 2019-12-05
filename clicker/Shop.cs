@@ -4,64 +4,46 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 
 namespace clicker {
     class Shop {
-        public static List<Multiplyer> MultiplyersCosts = new List<Multiplyer>();
+        public static List<Multiplier> MultipliersCosts = new List<Multiplier>();
 
-        Game game;
-        
         public delegate void MethodContainer(int buttonId, int cost);
-        public event MethodContainer OnMultiplyerCostChanged;
+        public event MethodContainer OnMultiplierCostChanged;
+        
 
-        public Shop(Game game) {
-            this.game = game;
+        public void AddMultiplierCost(Multiplier mult)  {
+            MultipliersCosts.Add(mult);
         }
 
-        public void AddMultiplyerCost(Multiplyer mult)  {
-            MultiplyersCosts.Add(mult);
+        public static bool ContainsId(int id)  {
+            return MultipliersCosts.Any(t => t.ButtonId == id);
         }
 
-        public static bool ContainsId(int id) { // это нужно будет очень редко, но напишу все же
-            for (int i = 0; i < MultiplyersCosts.Count; i++) {
-                if (MultiplyersCosts[i].ButtonId == id) {
-                    return true;
+        public static Multiplier FindById(int id) {
+            for (int i = 0; i < MultipliersCosts.Count; i++) {
+                if (MultipliersCosts[i].ButtonId == id) {
+                    return MultipliersCosts[i];
                 }
             }
-            return false;
-        }
-
-        public static Multiplyer FindById(int id) {
-            for (int i = 0; i < MultiplyersCosts.Count; i++) {
-                if (MultiplyersCosts[i].ButtonId == id) {
-                    return MultiplyersCosts[i];
-                }
-            }
-            throw new KeyNotFoundException("Не найдено");
+            throw new KeyNotFoundException("@string/NotFound");
         }
 
 
         public static int Index(int id) {
-            for (int i = 0; i < MultiplyersCosts.Count; i++) {
-                if (MultiplyersCosts[i].ButtonId == id) {
+            for (int i = 0; i < MultipliersCosts.Count; i++) {
+                if (MultipliersCosts[i].ButtonId == id) {
                     return i;
                 }
             }
-            throw new KeyNotFoundException("Не найдено");
+            throw new KeyNotFoundException("@string/NotFound");
         }
 
-       
-
-        public void UpdateMultiplyerCost(int buttonId)  {
-            int index = Index(buttonId);
-            MultiplyersCosts[index].Cost *= MultiplyersCosts[index].CostMultiplyer;
-            OnMultiplyerCostChanged(buttonId, MultiplyersCosts[index].Cost);
+        public void UpdateMultiplierCost(int buttonId)  {
+            var index = Index(buttonId);
+            MultipliersCosts[index].Cost *= MultipliersCosts[index].CostMultiplier;
+            OnMultiplierCostChanged?.Invoke(buttonId, MultipliersCosts[index].Cost);
         }
 
     }

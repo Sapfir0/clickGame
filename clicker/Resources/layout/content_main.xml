@@ -43,14 +43,13 @@
             android:text="Click me"
             android:layout_gravity="center"
             android:id="@+id/clickBtn" />
-
+         
             <include layout="@layout/ShopLayout" />
 
 
     </LinearLayout>
 
                           
-
                        
 
 

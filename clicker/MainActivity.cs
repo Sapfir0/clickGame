@@ -13,70 +13,62 @@ using Android.Widget;
 namespace clicker
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity {
+    public class MainActivity : HeaderActivity {
 
-        Button clickBtn;
-        TextView countPoints;
+        private Button _clickBtn;
+        private TextView _countPoints;
 
-        Game game;
-        Shop shop;
+        private Game _game;
+        private Shop _shop;
 
         protected override void OnCreate(Bundle savedInstanceState) {
             base.OnCreate(savedInstanceState);
-            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            SetContentView(Resource.Layout.activity_main);
+            
+            _clickBtn = FindViewById<Button>(Resource.Id.clickBtn);
+            _clickBtn.Click += AddOneToCounterListener;
+            _countPoints = FindViewById<TextView>(Resource.Id.countPoints);
 
-            Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
-            SetSupportActionBar(toolbar);
-
-            clickBtn = FindViewById<Button>(Resource.Id.clickBtn);
-            clickBtn.Click += AddOneToCounterListener;
-            countPoints = FindViewById<TextView>(Resource.Id.countPoints);
-
-            game = Game.GetInstanse();
-            shop = new Shop(game);
+            _game = Game.GetInstance();
+            _shop = new Shop();
             
             
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
-            var multiplyersList = new List<Tuple<int, int, int>>()  {
+            var multipliersList = new List<Tuple<int, int, int>>()  {
                 Tuple.Create(5, 1, 2), Tuple.Create(30, 2, 3)
             };
 
-            foreach (var item in multiplyersList)  {
-                var (cost, multiplyer, costMultiplyer) = item;
-                var button = MultiplyerButtonBuilder.CreateButtonOnNewRow(this, ref tableLayout, cost, multiplyer, costMultiplyer);
+            foreach (var item in multipliersList)  {
+                var (cost, multiplier, costMultiplier) = item;
+                var button = MultiplierButtonBuilder.CreateButtonOnNewRow(this, ref tableLayout, cost);
                 button.Click += BuyModifier;
-                var mult = new Multiplyer(button.Id, cost, multiplyer, costMultiplyer);
-                shop.AddMultiplyerCost(mult);
+                _shop.AddMultiplierCost(new Multiplier(button.Id, cost, multiplier, costMultiplier));
             }
 
 
             var startIdleBtn = FindViewById<Button>(Resource.Id.idleStart);
-            startIdleBtn.Click += game.StartIdleFarm;
+            startIdleBtn.Click += _game.StartIdleFarm;
 
-            game.OnChangedPoints += SetTextOnTextView;
-
-            shop.OnMultiplyerCostChanged += UpdateButtonCost;
+            _game.OnChangedPoints += SetTextOnTextView;
+            _shop.OnMultiplierCostChanged += UpdateButtonCost;
         }
 
 
         public void SetTextOnTextView(int points) {
             Console.WriteLine(points);
-            string intSequence = points.ToString();
-            countPoints.Text = intSequence;
-            foreach (var multiplyerCost in Shop.MultiplyersCosts) {
-
-                using (var h = new Handler(Looper.MainLooper))
-                    h.Post(() => {
-                        var openingButton = FindViewById<Button>(multiplyerCost.ButtonId);
-                        openingButton.Enabled = points >= multiplyerCost.Cost;
-                    });
+            var intSequence = points.ToString(CultureInfo.CurrentCulture);
+            _countPoints.Text = intSequence;
+            foreach (var multiplierCost in Shop.MultipliersCosts)  {
+                using var h = new Handler(Looper.MainLooper);
+                h.Post(() => {
+                    var openingButton = FindViewById<Button>(multiplierCost.ButtonId);
+                    openingButton.Enabled = points >= multiplierCost.Cost;
+                });
             }
         }
 
 
         public void AddOneToCounterListener(object sender, EventArgs e) {
-            game.AddMultipierPointsToCounter();
+            _game.AddMultipierPointsToCounter();
         }
 
         public void UpdateButtonCost(int buttonId, int cost) {
@@ -87,10 +79,10 @@ namespace clicker
 
         private void BuyModifier(object sender, EventArgs e) {
             var currentBtn = (Button)sender;
-            var multiplyerCost = Shop.FindById(currentBtn.Id); 
-            game.DecrementCurrentPoints(multiplyerCost.Cost);
-            game.IncrementMultiplier(multiplyerCost.CounterMultiplyer);
-            shop.UpdateMultiplyerCost(currentBtn.Id);
+            var multiplierCost = Shop.FindById(currentBtn.Id); 
+            _game.DecrementCurrentPoints(multiplierCost.Cost);
+            _game.IncrementMultiplier(multiplierCost.CounterMultiplier);
+            _shop.UpdateMultiplierCost(currentBtn.Id);
         }
 
 
