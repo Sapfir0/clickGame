@@ -40,12 +40,16 @@ namespace clicker {
             throw new KeyNotFoundException("@string/NotFound");
         }
 
+        public static string GetTextForMultiplierButton(int cost, int multiplier)  {
+            return $"{cost}P +{multiplier}/клик";
+        }
+
         public void UpdateMultiplierCost(int buttonId)  {
             var index = Index(buttonId);
             var mult = MultipliersCosts[index];
 
             mult.Cost *= mult.CostMultiplier;
-            var buttonText = $"{mult.Cost}P +{mult.CounterMultiplier}/клик";
+            var buttonText = GetTextForMultiplierButton(mult.Cost, mult.CostMultiplier);
             OnMultiplierCostChanged?.Invoke(buttonId, buttonText);
         }
 

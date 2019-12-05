@@ -47,6 +47,8 @@ namespace clicker
                 var (cost, multiplier, costMultiplier) = item;
                 var button = MultiplierButtonBuilder.CreateButtonOnNewRow(this, ref tableLayout, cost, multiplier);
                 button.Click += BuyModifier;
+                button.Text = Shop.GetTextForMultiplierButton(cost, costMultiplier);
+
                 _shop.AddMultiplierCost(new Multiplier(button.Id, cost, multiplier, costMultiplier));
             }
 
@@ -60,6 +62,8 @@ namespace clicker
 
             _game.OnChangedPoints += SetScoreOnTextView;
             _shop.OnMultiplierCostChanged += UpdateButtonCost;
+
+
         }
 
 
