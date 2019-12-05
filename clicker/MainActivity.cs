@@ -45,7 +45,7 @@ namespace clicker
 
             foreach (var item in multipliersList)  {
                 var (cost, multiplier, costMultiplier) = item;
-                var button = MultiplierButtonBuilder.CreateButtonOnNewRow(this, ref tableLayout, cost);
+                var button = MultiplierButtonBuilder.CreateButtonOnNewRow(this, ref tableLayout, cost, multiplier);
                 button.Click += BuyModifier;
                 _shop.AddMultiplierCost(new Multiplier(button.Id, cost, multiplier, costMultiplier));
             }
@@ -83,9 +83,9 @@ namespace clicker
             _game.AddMultipierPointsToCounter();
         }
 
-        public void UpdateButtonCost(int buttonId, int cost) {
+        public void UpdateButtonCost(int buttonId, string lining) {
             var button = FindViewById<Button>(buttonId);
-            button.Text = cost.ToString(CultureInfo.CurrentCulture); // ух лучше пусть предупреждение будет, чем этот аргмент
+            button.Text = lining;
 
         }
 

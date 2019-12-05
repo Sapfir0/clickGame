@@ -9,7 +9,7 @@ namespace clicker {
     class Shop {
         public static List<Multiplier> MultipliersCosts = new List<Multiplier>();
 
-        public delegate void MethodContainer(int buttonId, int cost);
+        public delegate void MethodContainer(int buttonId, string lining);
         public event MethodContainer OnMultiplierCostChanged;
         
 

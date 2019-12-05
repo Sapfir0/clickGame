@@ -15,9 +15,9 @@ namespace clicker {
     class MultiplierButtonBuilder {
         
         
-        private static Button CreateButton(Context context, int cost, string buttonText = null) {
+        private static Button CreateButton(Context context, int cost, int multiplier) {
             var newBtn = new Button(context) {
-                Text = buttonText + cost.ToString(CultureInfo.CurrentCulture),
+                Text = cost.ToString(CultureInfo.CurrentCulture) + "P " + multiplier.ToString(CultureInfo.CurrentCulture),
                 Enabled = false
             };
             var rand = new Random();
@@ -31,9 +31,9 @@ namespace clicker {
             return newBtn;
         }
 
-        public static Button CreateButtonOnNewRow(Context context, ref TableLayout tableLayout, int cost,  string buttonText = null) {
+        public static Button CreateButtonOnNewRow(Context context, ref TableLayout tableLayout, int cost, int multiplier) {
             var tableRow = new TableRow(context);
-            var newBtn = CreateButton(context, cost, buttonText);
+            var newBtn = CreateButton(context, cost, multiplier);
             
             tableRow.AddView(newBtn);
             tableLayout.AddView(tableRow);
