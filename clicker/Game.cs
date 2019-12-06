@@ -11,10 +11,12 @@ using Android.Views;
 using Android.Widget;
 
 namespace clicker {
-    class Game {
+    class Game : IDisposable
+    {
         private System.Timers.Timer aTimer;
         int CurrentPoints { get; set; } //общее число очков
         public int Multiplier { get; set; } = 1 ; // насколько мы будем умножать число снизу
+        public Shop Shop { get; set; } = new Shop();
 
         public delegate void MethodContainer(int currentPoints);
         public event MethodContainer OnChangedPoints;
@@ -45,6 +47,14 @@ namespace clicker {
             OnChangedPoints(CurrentPoints);
         }
 
+        public void BuyModifier(int multiplierId)
+        {
+            var multiplier = Shop.FindById(multiplierId);
+            this.DecrementCurrentPoints(multiplier.Cost);
+            this.IncrementMultiplier(multiplier.CounterMultiplier);
+            Shop.UpdateMultiplierCost(multiplierId);
+        }
+
 
         private void TickElapsed(object sender, System.Timers.ElapsedEventArgs e) {
             AddMultipierPointsToCounter();
@@ -57,5 +67,9 @@ namespace clicker {
             aTimer.Enabled = true;
         }
 
+        public void Dispose()
+        {
+            aTimer.Close();
+        }
     }
 }

@@ -24,7 +24,6 @@ namespace clicker
         private TextView _countPoints;
 
         private Game _game;
-        private Shop _shop;
 
         protected override void OnCreate(Bundle savedInstanceState) {
             base.OnCreate(savedInstanceState);
@@ -35,7 +34,6 @@ namespace clicker
             _countPoints = FindViewById<TextView>(Resource.Id.countPoints);
 
             _game = new Game();
-            _shop = new Shop();
             
             
             var tableLayout = FindViewById<TableLayout>(Resource.Id.tableLayout);
@@ -55,7 +53,7 @@ namespace clicker
                 button.Click += BuyModifier;
                 button.Text = Shop.GetTextForMultiplierButton(cost, costMultiplier);
 
-                _shop.AddMultiplierCost(new Multiplier(button.Id, cost, multiplier, costMultiplier));
+                _game.Shop.AddMultiplierCost(new Multiplier(button.Id, cost, multiplier, costMultiplier));
             }
 
 
@@ -67,25 +65,26 @@ namespace clicker
             };
 
             _game.OnChangedPoints += SetScoreOnTextView;
-            _shop.OnMultiplierCostChanged += UpdateButtonCost;
+            _game.Shop.OnMultiplierCostChanged += UpdateButtonCost;
 
 
         }
 
 
         public void SetScoreOnTextView(int points) {
-            using var h = new Handler(Looper.MainLooper);
-            h.Post(() => {
+            using (var h = new Handler(Looper.MainLooper))
+            h.Post(() =>
+            {
                 string intSequence = points.ToString(CultureInfo.CurrentCulture);
                 _countPoints.Text = intSequence;
                 Console.WriteLine(points);
 
-                foreach (var multiplierCost in Shop.MultipliersCosts)  {
+                foreach (var multiplierCost in Shop.MultipliersCosts)
+                {
                     var openingButton = FindViewById<Button>(multiplierCost.ButtonId);
                     openingButton.Enabled = points >= multiplierCost.Cost;
                 }
             });
-            
         }
 
 
@@ -101,10 +100,8 @@ namespace clicker
 
         private void BuyModifier(object sender, EventArgs e) {
             var currentBtn = (Button)sender;
-            var multiplierCost = Shop.FindById(currentBtn.Id); 
-            _game.DecrementCurrentPoints(multiplierCost.Cost);
-            _game.IncrementMultiplier(multiplierCost.CounterMultiplier);
-            _shop.UpdateMultiplierCost(currentBtn.Id);
+            var modifierId = currentBtn.Id;
+            _game.BuyModifier(modifierId);
         }
 
 
