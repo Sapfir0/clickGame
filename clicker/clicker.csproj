@@ -63,10 +63,12 @@
     <Compile Include="Activitys\HeaderActivity.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Models.cs" />
     <Compile Include="Multiplier.cs" />
     <Compile Include="MultiplierButtonBuilder.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingsActivity.cs" />
     <Compile Include="Shop.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -113,6 +115,9 @@
       <Version>2.9.8</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.6.292</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.1" />
     <PackageReference Include="Xamarin.Android.Support.Core.Utils" Version="28.0.0.1" />

@@ -12,7 +12,7 @@ using Android.Widget;
 
 
 namespace clicker {
-    [Activity(Label = "HeaderActivity")]
+    [Activity(Label = "HeaderActivity", Theme = "@style/AppTheme.NoActionBar")]
     public class HeaderActivity : AppCompatActivity {
 
         protected override void OnCreate(Bundle savedInstanceState) {

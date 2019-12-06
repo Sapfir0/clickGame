@@ -15,7 +15,7 @@ namespace clicker {
     class MultiplierButtonBuilder {
         
         
-        private static Button CreateButton(Context context, int cost, int multiplier) {
+        private static Button CreateButton(Context context) {
             var newBtn = new Button(context) {
                 Enabled = false
             };
@@ -30,9 +30,9 @@ namespace clicker {
             return newBtn;
         }
 
-        public static Button CreateButtonOnNewRow(Context context, ref TableLayout tableLayout, int cost, int multiplier) {
+        public static Button CreateButtonOnNewRow(Context context, ref TableLayout tableLayout) {
             var tableRow = new TableRow(context);
-            var newBtn = CreateButton(context, cost, multiplier);
+            var newBtn = CreateButton(context);
             
             tableRow.AddView(newBtn);
             tableLayout.AddView(tableRow);
