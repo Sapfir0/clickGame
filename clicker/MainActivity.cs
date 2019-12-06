@@ -29,15 +29,6 @@ namespace clicker
         protected override void OnCreate(Bundle savedInstanceState) {
             base.OnCreate(savedInstanceState);
 
-            //string completePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "clicker.db");
-            //var db = new SQLiteConnection(completePath);
-            //var exitDateTime = db.Table<ExitState>().Last().ExitDateTime;
-            //var currentDateTime = DateTime.UtcNow;
-            //var diff = currentDateTime - exitDateTime;
-            //var allSeconds = diff.TotalSeconds;
-            //var allPoints = Convert.ToInt32(allSeconds * _game.Multiplier);
-            //SetScoreOnTextView(allPoints);
-
 
             _clickBtn = FindViewById<Button>(Resource.Id.clickBtn);
             _clickBtn.Click += AddOneToCounterListener;
@@ -120,14 +111,7 @@ namespace clicker
         protected override void OnStop()
         {
             base.OnStop();
-            //string completePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "clicker.db");
-            //var db = new SQLiteConnection(completePath);
-            //db.CreateTable<ExitState>();
 
-            //var exitDateState = new ExitState {
-            //    ExitDateTime = DateTime.UtcNow
-            //};
-            //db.Insert(exitDateState);
         }
 
         protected override void OnDestroy() {
