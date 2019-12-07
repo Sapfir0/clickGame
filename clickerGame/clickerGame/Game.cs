@@ -39,6 +39,14 @@ namespace clicker {
             OnChangedPoints(CurrentPoints);
         }
 
+        public void BuyModifier(int multiplierId)
+        {
+            var multiplier = Shop.FindById(multiplierId);
+            this.DecrementCurrentPoints(multiplier.Cost);
+            this.IncrementMultiplier(multiplier.CounterMultiplier);
+            Shop.UpdateMultiplierCost(multiplierId);
+        }
+
 
         private void TickElapsed(object sender, System.Timers.ElapsedEventArgs e) {
             AddMultipierPointsToCounter();
