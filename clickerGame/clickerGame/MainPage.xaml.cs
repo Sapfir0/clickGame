@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using clicker;
 using Xamarin.Forms;
 
+
 namespace clickerGame {
     public partial class MainPage : ContentPage {
         
@@ -19,14 +20,14 @@ namespace clickerGame {
             InitializeComponent();
 
             
-            _clickBtn = this.FindByName<Button>("clickBtn");
-            _clickBtn.Clicked += AddOneToCounterListener;
-            _countPoints = this.FindByName<Label>("countPoints");
-
+             _clickBtn = this.FindByName<Button>("ClickBtn");
+             _clickBtn.Clicked += AddOneToCounterListener;
+             _countPoints = this.FindByName<Label>("CountPoints");
+            
             _game = new Game();
             
             
-            var tableLayout = this.FindByName("tableLayout");
+            var flexLayout = this.FindByName<FlexLayout>("FlexLayout");
             var multipliersList = new List<Tuple<int, int, int>>()  {
                 Tuple.Create(1, 1, 2),
                 Tuple.Create(1, 2, 2),
@@ -36,41 +37,45 @@ namespace clickerGame {
                 Tuple.Create(25, 19, 6),
                 Tuple.Create(30, 29, 7)
             };
-
+            
             foreach (var item in multipliersList)  {
                 var (cost, multiplier, costMultiplier) = item;
-                var button = CreateButtonOnNewRow(ref tableLayout);
+                var button = CreateButtonOnNewRow(ref flexLayout);
                 button.Clicked += BuyModifier;
                 button.Text = Shop.GetTextForMultiplierButton(cost, costMultiplier);
-
-                _game.Shop.AddMultiplierCost(new Multiplier(button.Id, cost, multiplier, costMultiplier));
+            
+                _game.Shop.AddMultiplierCost(new Multiplier(Convert.ToInt32(button.AutomationId), cost, multiplier, costMultiplier));
             }
-
-
-            var startIdleBtn = this.FindByName<Button>("idleStart");
+            
+            
+            var startIdleBtn = this.FindByName<Button>("IdleStart");
             startIdleBtn.Clicked += (object obj, EventArgs args) =>
             {
                 startIdleBtn.IsEnabled = false;
                 _game.StartIdleFarm();
             };
-
+            
             _game.OnChangedPoints += SetScoreOnTextView;
             _game.Shop.OnMultiplierCostChanged += UpdateButtonCost;
 
         }
         public void SetScoreOnTextView(int points) {
-            using (var h = new Handler(Looper.MainLooper))
-            h.Post(() =>
-            {
+            Device.BeginInvokeOnMainThread(() => {
                 string intSequence = points.ToString(CultureInfo.CurrentCulture);
                 _countPoints.Text = intSequence;
                 Console.WriteLine(points);
+                var flexLayout = this.FindByName<FlexLayout>("FlexLayout");
+                var length = flexLayout.Children.Count;
 
-                foreach (var multiplierCost in Shop.MultipliersCosts)  {
-                    var openingButton = this.FindByName<Button>(multiplierCost.ButtonId.ToString());
-                    openingButton.IsEnabled = points >= multiplierCost.Cost;
+                for (int i = 1; i < length; i++) {
+                    var button = (Button)flexLayout.Children.ElementAt(i);
+                    var buttonId = Convert.ToInt32(button.AutomationId);
+                    var infoAboutMultipier = Shop.FindById(buttonId);
+                    button.IsEnabled = points >= infoAboutMultipier.Cost;
+
                 }
             });
+
         }
 
         private static Button CreateButton() {
@@ -84,16 +89,13 @@ namespace clickerGame {
             while (Shop.ContainsId(randomId)) {
                 randomId = rand.Next(bottomLine, upperLine);
             }
-            newBtn.Id = randomId;
+            newBtn.AutomationId = randomId.ToString();
             return newBtn;
         }
 
-        public static Button CreateButtonOnNewRow(ref TableLayout tableLayout) {
-            var tableRow = new TableRow();
+        public static Button CreateButtonOnNewRow(ref FlexLayout tableLayout) {
             var newBtn = CreateButton();
-            
-            tableRow.AddView(newBtn);
-            tableLayout.AddView(tableRow);
+            tableLayout.Children.Add(newBtn);
             return newBtn;
         }
 
@@ -110,7 +112,7 @@ namespace clickerGame {
         private void BuyModifier(object sender, EventArgs e) {
             var currentBtn = (Button)sender;
             var modifierId = currentBtn.Id;
-            _game.BuyModifier(modifierId);
+            _game.BuyModifier(Convert.ToInt32(modifierId));
         }
 
     }
