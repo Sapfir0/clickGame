@@ -11,14 +11,10 @@ using Xamarin.Forms;
 namespace clickerGame {
     public partial class MainPage : ContentPage {
         
-        private Label _countPoints;
         private Game _game;
 
         public MainPage() {
             InitializeComponent();
-
-
-             _countPoints = this.FindByName<Label>("CountPoints");
            
             _game = new Game();
             
@@ -42,7 +38,6 @@ namespace clickerGame {
                 _game.Shop.AddMultiplierCost(Convert.ToInt32(button.AutomationId), new Multiplier(cost, multiplier, costMultiplier));
             }
             
-            
             var startIdleBtn = this.FindByName<Button>("IdleStart");
             startIdleBtn.Clicked += (object obj, EventArgs args) =>
             {
@@ -57,11 +52,13 @@ namespace clickerGame {
         public void SetScoreOnTextView(int points) {
             Device.BeginInvokeOnMainThread(() => {
                 string intSequence = points.ToString(CultureInfo.CurrentCulture);
-                _countPoints.Text = intSequence;
+                var countPoints = this.FindByName<Label>("CountPoints");
+                countPoints.Text = intSequence;
                 Console.WriteLine(points);
+
                 var flexLayout = this.FindByName<FlexLayout>("FlexLayout");
                 var length = flexLayout.Children.Count;
-
+               
                 for (int i = 1; i < length; i++) { //от 1 т.к. первая кнопка отвечает за идл, и я не ей не выдавал автоматед айди
                     var button = (Button)flexLayout.Children.ElementAt(i);
                     var buttonId = Convert.ToInt32(button.AutomationId);
@@ -100,15 +97,22 @@ namespace clickerGame {
         }
 
         public void UpdateButtonCost(int buttonId, string lining) {
+            //var flexLayout = this.FindByName<FlexLayout>("FlexLayout");
+            //var btn = flexLayout.FindByName<Button>(buttonId.ToString());
+
+            var btn = FindByAutomatedId(buttonId);
+            btn.Text = lining;
+        }
+
+        public Button FindByAutomatedId(int id) {
             var flexLayout = this.FindByName<FlexLayout>("FlexLayout");
             var length = flexLayout.Children.Count;
             for (int i = 1; i < length; i++) {
-                if (flexLayout.Children.ElementAt(i).AutomationId == buttonId.ToString()) {
-                    ((Button)flexLayout.Children.ElementAt(i)).Text = lining;
-
+                if (flexLayout.Children.ElementAt(i).AutomationId == id.ToString()) {
+                    return (Button)flexLayout.Children.ElementAt(i);
                 }
             }
-            
+            throw new Exception();
         }
 
         private void BuyModifier(object sender, EventArgs e) {
