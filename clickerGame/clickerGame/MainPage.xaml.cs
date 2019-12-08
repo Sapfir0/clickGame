@@ -11,21 +11,16 @@ using Xamarin.Forms;
 namespace clickerGame {
     public partial class MainPage : ContentPage {
         
-        private Button _clickBtn;
         private Label _countPoints;
-
         private Game _game;
 
         public MainPage() {
             InitializeComponent();
 
-            
-             _clickBtn = this.FindByName<Button>("ClickBtn");
-             _clickBtn.Clicked += AddOneToCounterListener;
+
              _countPoints = this.FindByName<Label>("CountPoints");
-            
+           
             _game = new Game();
-            
             
             var flexLayout = this.FindByName<FlexLayout>("FlexLayout");
             var multipliersList = new List<Tuple<int, int, int>>()  {
@@ -70,7 +65,7 @@ namespace clickerGame {
                 for (int i = 1; i < length; i++) { //от 1 т.к. первая кнопка отвечает за идл, и я не ей не выдавал автоматед айди
                     var button = (Button)flexLayout.Children.ElementAt(i);
                     var buttonId = Convert.ToInt32(button.AutomationId);
-                    var infoAboutMultipier = Shop.FindById(buttonId);
+                    var infoAboutMultipier = _game.Shop.MultipliersCosts[buttonId];
                     button.IsEnabled = points >= infoAboutMultipier.Cost;
 
                 }
@@ -78,7 +73,7 @@ namespace clickerGame {
 
         }
 
-        private static Button CreateButton() {
+        private Button CreateButton() {
             var newBtn = new Button() {
                 IsEnabled = false
             };
@@ -86,7 +81,7 @@ namespace clickerGame {
             var(bottomLine, upperLine) = Tuple.Create(1000000000, 2099999999);
 
             var randomId = rand.Next(bottomLine, upperLine);
-            while (Shop.ContainsId(randomId)) {
+            while (_game.Shop.ContainsId(randomId)) {
                 randomId = rand.Next(bottomLine, upperLine);
             }
             
@@ -94,7 +89,7 @@ namespace clickerGame {
             return newBtn;
         }
 
-        public static Button CreateButtonOnNewRow(ref FlexLayout tableLayout) {
+        public Button CreateButtonOnNewRow(ref FlexLayout tableLayout) {
             var newBtn = CreateButton();
             tableLayout.Children.Add(newBtn);
             return newBtn;

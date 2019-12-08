@@ -10,7 +10,7 @@
         <Label Text="U have" />
         
         <Label Text=" 0" x:Name="CountPoints"/>
-        <Button x:Name="ClickBtn"></Button>
+        <Button x:Name="ClickBtn" Clicked="AddOneToCounterListener"></Button>
         
             
         <FlexLayout x:Name="FlexLayout">

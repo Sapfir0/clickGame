@@ -8,7 +8,7 @@ namespace clicker {
 
 
     class Shop {
-        public static Dictionary<int, Multiplier> MultipliersCosts = new Dictionary<int, Multiplier>();
+        public Dictionary<int, Multiplier> MultipliersCosts = new Dictionary<int, Multiplier>();
 
         public delegate void MethodContainer(int buttonId, string lining);
         public event MethodContainer OnMultiplierCostChanged;
@@ -18,12 +18,12 @@ namespace clicker {
             MultipliersCosts.Add(buttonId, mult);
         }
 
-        public static bool ContainsId(int id)  {
+        public bool ContainsId(int id)  {
             Multiplier mult;
             return MultipliersCosts.TryGetValue(id, out mult);
         }
 
-        public static Multiplier FindById(int id) {
+        public Multiplier FindById(int id) {
             foreach (var item in MultipliersCosts) {
                 if (item.Key == id) {
                     return item.Value;
