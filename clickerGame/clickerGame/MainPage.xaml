@@ -2,19 +2,21 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:clickerGame"
+            
              x:Class="clickerGame.MainPage">
 
     <StackLayout
-        x:Name="StackLayout">
+        x:Name="StackLayout" >
 
         <Label Text="U have" />
         
         <Label Text=" 0" x:Name="CountPoints"/>
+
         <Button x:Name="ClickBtn"></Button>
         
             
         <FlexLayout x:Name="FlexLayout">
-            <Button x:Name="IdleStart"></Button>
+            <Button Text="StartIdle" x:Name="IdleStart" ></Button>
         
         </FlexLayout>
     </StackLayout>
