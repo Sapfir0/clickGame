@@ -67,7 +67,7 @@ namespace clickerGame {
                 var flexLayout = this.FindByName<FlexLayout>("FlexLayout");
                 var length = flexLayout.Children.Count;
 
-                for (int i = 1; i < length; i++) {
+                for (int i = 1; i < length; i++) { //от 1 т.к. первая кнопка отвечает за идл, и я не ей не выдавал автоматед айди
                     var button = (Button)flexLayout.Children.ElementAt(i);
                     var buttonId = Convert.ToInt32(button.AutomationId);
                     var infoAboutMultipier = Shop.FindById(buttonId);
@@ -104,14 +104,20 @@ namespace clickerGame {
         }
 
         public void UpdateButtonCost(int buttonId, string lining) {
-            var button = this.FindByName<Button>(buttonId.ToString());
-            button.Text = lining;
+            var flexLayout = this.FindByName<FlexLayout>("FlexLayout");
+            var length = flexLayout.Children.Count;
+            for (int i = 1; i < length; i++) {
+                if (flexLayout.Children.ElementAt(i).AutomationId == buttonId.ToString()) {
+                    ((Button)flexLayout.Children.ElementAt(i)).Text = lining;
 
+                }
+            }
+            
         }
 
         private void BuyModifier(object sender, EventArgs e) {
             var currentBtn = (Button)sender;
-            var modifierId = currentBtn.Id;
+            var modifierId = currentBtn.AutomationId;
             _game.BuyModifier(Convert.ToInt32(modifierId));
         }
 
