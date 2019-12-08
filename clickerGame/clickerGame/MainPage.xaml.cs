@@ -44,7 +44,7 @@ namespace clickerGame {
                 button.Clicked += BuyModifier;
                 button.Text = Shop.GetTextForMultiplierButton(cost, costMultiplier);
             
-                _game.Shop.AddMultiplierCost(new Multiplier(Convert.ToInt32(button.AutomationId), cost, multiplier, costMultiplier));
+                _game.Shop.AddMultiplierCost(Convert.ToInt32(button.AutomationId), new Multiplier(cost, multiplier, costMultiplier));
             }
             
             
@@ -89,6 +89,7 @@ namespace clickerGame {
             while (Shop.ContainsId(randomId)) {
                 randomId = rand.Next(bottomLine, upperLine);
             }
+            
             newBtn.AutomationId = randomId.ToString();
             return newBtn;
         }
