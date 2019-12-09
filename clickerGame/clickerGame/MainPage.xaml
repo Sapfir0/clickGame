@@ -6,15 +6,18 @@
 
     <StackLayout
         x:Name="StackLayout">
-
-        <Label Text="U have" />
         
         <Label Text=" 0" x:Name="CountPoints"/>
-        <Button x:Name="ClickBtn" Clicked="AddOneToCounterListener"></Button>
+        <Button x:Name="ClickBtn" 
+                Text="Кликни на меня"
+                Clicked="AddOneToCounterListener" 
+                HeightRequest="100" 
+                WidthRequest="100"
+                BackgroundColor="AntiqueWhite"></Button>
         
             
-        <FlexLayout x:Name="FlexLayout">
-            <Button x:Name="IdleStart"></Button>
+        <FlexLayout x:Name="FlexLayout" Direction="Column" Wrap="Wrap" HeightRequest="200">
+            <Button x:Name="IdleStart" Text="AFK" HeightRequest="75" WidthRequest="75" ></Button>
         
         </FlexLayout>
     </StackLayout>

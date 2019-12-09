@@ -53,7 +53,7 @@ namespace clickerGame {
             Device.BeginInvokeOnMainThread(() => {
                 string intSequence = points.ToString(CultureInfo.CurrentCulture);
                 var countPoints = this.FindByName<Label>("CountPoints");
-                countPoints.Text = intSequence;
+                countPoints.Text = $"Набрал {intSequence} очков" ;
                 Console.WriteLine(points);
 
                 var flexLayout = this.FindByName<FlexLayout>("FlexLayout");
@@ -72,7 +72,10 @@ namespace clickerGame {
 
         private Button CreateButton() {
             var newBtn = new Button() {
-                IsEnabled = false
+                IsEnabled = false,
+                WidthRequest = 75,
+                HeightRequest = 75
+                
             };
             var rand = new Random();
             var(bottomLine, upperLine) = Tuple.Create(1000000000, 2099999999);
